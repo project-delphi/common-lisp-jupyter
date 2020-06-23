@@ -64,9 +64,19 @@
 (defmethod deserialize-trait (object (type (eql :date)) name value)
   (when (cdr value)
     (format nil "~4,'0D-~2,'0D-~2,'0D"
-                (jupyter:json-getf value "year")
-                (1+ (jupyter:json-getf value "month"))
-                (jupyter:json-getf value "date"))))
+                (gethash "year" value 2000)
+                (1+ (gethash "month" value 0))
+                (gethash "date" value 1))))
+
+; object
+
+(defmethod serialize-trait (object (type (eql :object)) name (value (eql nil)))
+  :empty-object)
+
+; object
+
+(defmethod serialize-trait (object (type (eql :array)) name (value (eql nil)))
+  :empty-array)
 
 ; Dict
 
@@ -96,6 +106,9 @@
 
 (defmethod deserialize-trait (object (type (eql :float-list)) name value)
   (mapcar (lambda (x) (coerce x 'double-float)) value))
+
+(defmethod deserialize-trait (object (type (eql :float-list)) name (value (eql nil)))
+  :empty-array)
 
 ; Link
 
@@ -170,3 +183,19 @@
 
 (defmethod deserialize-trait (object (type (eql :widget-list)) name value)
   (mapcar (lambda (v) (deserialize-trait object :widget name v)) value))
+
+(defmethod serialize-trait (object (type (eql :widget-list)) name (value (eql nil)))
+  :empty-array)
+
+; Widget Array
+
+(defmethod deserialize-trait (object (type (eql :widget-array)) name value)
+  (mapcar (lambda (v) (deserialize-trait object :widget name v)) value))
+
+(defmethod serialize-trait (object (type (eql :widget-array)) name (value (eql nil)))
+  :empty-array)
+
+(defmethod serialize-trait (object (type (eql :widget-array)) name (value list))
+  (mapcar (lambda (v) (serialize-trait object :widget name v)) value))
+
+

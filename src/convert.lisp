@@ -10,20 +10,19 @@
      :initform ""
      :accessor cell-source)))
 
-(defmethod jsown:to-json ((c cell))
-  (jsown:to-json
-    (with-slots (markdown source) c
-      (if markdown
-        (jupyter:json-new-obj
-          ("cell_type" "markdown")
-          ("source" (list source))
-          ("metadata" (jupyter:json-empty-obj)))
-        (jupyter:json-new-obj
-          ("cell_type" "code")
-          ("source" (list source))
-          ("execution_count" :null)
-          ("outputs" nil)
-          ("metadata" (jupyter:json-new-obj ("collapsed" t))))))))
+; (defmethod shasht:write-json ((c cell) &optional output-stream)
+;   (with-slots (markdown source) c
+;     (if markdown
+;       (shasht:with-object output-stream
+;         ("cell_type" "markdown")
+;         ("source" (list source))
+;         ("metadata" (jupyter:json-empty-obj)))
+;       (shasht:with-object output-stream
+;         ("cell_type" "code")
+;         ("source" (list source))
+;         ("execution_count" :null)
+;         ("outputs" nil)
+;         ("metadata" (jupyter:json-new-obj ("collapsed" t)))))))
 
 (defun my-read (value)
   (handler-case
@@ -34,7 +33,7 @@
   "Convert Lisp source to Jupyter notebook"
   (with-open-file (dest-stream dest :direction :output :if-exists :supersede)
     (write-string
-      (jsown:to-json
+      (shasht:to-json
         (jupyter:json-new-obj
           ("nbformat" 4)
           ("nbformat_minor" 2)

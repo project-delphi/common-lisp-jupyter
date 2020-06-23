@@ -15,13 +15,13 @@
      #-clasp :eclector
      #-clasp :ironclad
      :iterate
-     :jsown
      :multilang-documentation
      :pzmq
      :puri
      :trivial-garbage
      :trivial-gray-streams
-     :trivial-mimes)
+     :trivial-mimes
+     :shasht)
   :components
     ((:module res
       :components

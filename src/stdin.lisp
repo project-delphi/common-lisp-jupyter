@@ -82,7 +82,7 @@ most cases of *query-io* usage. Makes overloading y-or-no-p unnecessary.
         (inform :info (stdin-stream-channel stream) "value")
         (sleep 2)
         (let ((value (concatenate 'string
-                       (json-getf (message-content (message-recv channel)) "value")
+                       (gethash "value" (message-content (message-recv channel)))
                        '(#\Newline))))
           (inform :info (stdin-stream-channel stream) "value ~S" value)
           (adjust-array input (length value)
